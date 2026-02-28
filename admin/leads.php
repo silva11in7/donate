@@ -14,9 +14,13 @@ $steps = [
     'complete' => ['label' => 'Pago (Final)', 'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>']
 ];
 
-$funnel_data = [];
-foreach ($steps as $key => $val) {
-    $funnel_data[$key] = $pdo->query("SELECT COUNT(*) FROM leads WHERE step = '$key'")->fetchColumn();
+// Optimized Funnel stats (Single roundtrip)
+$funnel_raw = $pdo->query("SELECT step, COUNT(*) as count FROM leads GROUP BY step")->fetchAll();
+$funnel_data = array_fill_keys(array_keys($steps), 0);
+foreach ($funnel_raw as $row) {
+    if (isset($funnel_data[$row['step']])) {
+        $funnel_data[$row['step']] = (int)$row['count'];
+    }
 }
 
 echo get_header("Funil de Leads");

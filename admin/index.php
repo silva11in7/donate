@@ -4,11 +4,18 @@ require_once 'config.php';
 require_once 'layout.php';
 check_auth();
 
-// Stats queries
-$total_revenue = $pdo->query("SELECT SUM(amount) FROM leads WHERE status = 'approved'")->fetchColumn() ?: 0;
-$total_leads = $pdo->query("SELECT COUNT(*) FROM leads")->fetchColumn();
-$pending_pix = $pdo->query("SELECT COUNT(*) FROM leads WHERE status = 'pending' AND pix_code IS NOT NULL")->fetchColumn();
-$conversion_rate = $total_leads > 0 ? round(($pdo->query("SELECT COUNT(*) FROM leads WHERE status = 'approved'")->fetchColumn() / $total_leads) * 100, 1) : 0;
+// Optimized Stats query (Single roundtrip)
+$stats = $pdo->query("SELECT 
+    COUNT(*) as total_leads,
+    SUM(CASE WHEN status = 'approved' THEN amount ELSE 0 END) as total_revenue,
+    SUM(CASE WHEN status = 'pending' AND pix_code IS NOT NULL THEN 1 ELSE 0 END) as pending_pix,
+    SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) as approved_leads
+FROM leads")->fetch();
+
+$total_leads = $stats['total_leads'] ?: 0;
+$total_revenue = $stats['total_revenue'] ?: 0;
+$pending_pix = $stats['pending_pix'] ?: 0;
+$conversion_rate = $total_leads > 0 ? round(($stats['approved_leads'] / $total_leads) * 100, 1) : 0;
 
 echo get_header("Home");
 echo get_sidebar();

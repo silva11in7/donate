@@ -35,12 +35,18 @@ try {
                 // Force PG for Supabase
                 if (!$has_pgsql) throw new PDOException("Driver 'pdo_pgsql' não encontrado.");
                 $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
-                $pdo = new PDO($dsn, $user, $pass, [PDO::ATTR_TIMEOUT => 5]);
+                $pdo = new PDO($dsn, $user, $pass, [
+                    PDO::ATTR_TIMEOUT => 5,
+                    PDO::ATTR_PERSISTENT => true
+                ]);
             } else {
                 // Try MySQL (phpMyAdmin)
                 if (!$has_mysql) throw new PDOException("Driver 'pdo_mysql' não encontrado.");
                 $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
-                $pdo = new PDO($dsn, $user, $pass, [PDO::ATTR_TIMEOUT => 5]);
+                $pdo = new PDO($dsn, $user, $pass, [
+                    PDO::ATTR_TIMEOUT => 5,
+                    PDO::ATTR_PERSISTENT => true
+                ]);
             }
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
@@ -175,8 +181,24 @@ function check_auth() {
 function get_current_admin() {
     global $pdo;
     if (!isset($_SESSION['user_id'])) return null;
+    
+    // Optimization: Cache admin data in session
+    if (isset($_SESSION['admin_user_cache']) && !isset($_GET['refresh_cache'])) {
+        return $_SESSION['admin_user_cache'];
+    }
+
     $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
     $stmt->execute([$_SESSION['user_id']]);
-    return $stmt->fetch();
+    $user = $stmt->fetch();
+    
+    if ($user) {
+        $_SESSION['admin_user_cache'] = $user;
+    }
+    
+    return $user;
+}
+
+function refresh_admin_cache() {
+    unset($_SESSION['admin_user_cache']);
 }
 ?>
