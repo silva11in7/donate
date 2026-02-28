@@ -49,18 +49,24 @@ $email = $input['email'] ?? 'doador@exemplo.com';
 $phone = $input['phone'] ?? '';
 $document = $input['document'] ?? '000.000.000-00';
 
-// Sanitize inputs
-$phone = preg_replace('/\D/', '', $phone);
-$document = preg_replace('/\D/', '', $document);
-
-// Ensure Brazil country code (55) for phone if it looks like a local number
-if (strlen($phone) >= 10 && substr($phone, 0, 2) !== '55') {
-    $phone = '55' . $phone;
-}
-
 if (!$amount) {
+    file_put_contents('amplo_error.log', "[" . date('Y-m-d H:i:s') . "] Valor inválido: " . json_encode($input) . "\n", FILE_APPEND);
     echo json_encode(['success' => false, 'error' => 'Valor inválido.']);
     exit;
+}
+
+// Robust phone sanitization for Brazil
+$phone = preg_replace('/\D/', '', $phone); // Remove any non-digit
+$document = preg_replace('/\D/', '', $document); // Remove any non-digit
+if (strlen($phone) === 11 && substr($phone, 0, 1) === '0') {
+    $phone = substr($phone, 1); // Remove leading 0 if it exists
+}
+
+// Amplo documentation says (11) 99999-9999. Usually means no 55 for national sales unless requested.
+// If it's 10 or 11 digits, we assume it's a clean Brazilian number without country code.
+// Don't prepend 55 automatically unless it's clear it's too short (like missing DDD).
+if (strlen($phone) <= 9) {
+    file_put_contents('amplo_error.log', "[" . date('Y-m-d H:i:s') . "] Telefone muito curto: $phone\n", FILE_APPEND);
 }
 
 // Prepare identifier
@@ -98,7 +104,19 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 
 $response = curl_exec($ch);
 $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+$curl_error = curl_error($ch);
 curl_close($ch);
+
+// Debug Log
+$debug_data = [
+    'time' => date('Y-m-d H:i:s'),
+    'url' => 'https://app.amplopay.com/api/v1/gateway/pix/receive',
+    'body_sent' => $body,
+    'http_code' => $http_code,
+    'raw_response' => $response,
+    'curl_error' => $curl_error
+];
+file_put_contents('amplo_debug.log', json_encode($debug_data, JSON_PRETTY_PRINT) . "\n---\n", FILE_APPEND);
 
 $resData = json_decode($response, true);
 
