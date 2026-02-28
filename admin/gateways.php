@@ -22,10 +22,12 @@ if (isset($_POST['save_config'])) {
         die("CSRF validation failed.");
     }
     $id = (int)$_POST['gw_id'];
-    $config = json_encode([
+    $config_arr = [
         'public_key' => $_POST['public_key'] ?? '',
-        'secret_key' => $_POST['secret_key'] ?? ''
-    ]);
+        'secret_key' => $_POST['secret_key'] ?? '',
+        'api_key' => $_POST['public_key'] ?? '' // Map public_key to api_key for convenience or specific fields
+    ];
+    $config = json_encode($config_arr);
     
     $stmt = $pdo->prepare("UPDATE gateways SET config_json = ? WHERE id = ?");
     $stmt->execute([$config, $id]);
@@ -112,7 +114,9 @@ echo get_sidebar();
                 
                 <div class="space-y-3">
                     <div class="space-y-1.5">
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Chave Pública (Client ID)</label>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                            <?php echo (strtolower($gw['name']) == 'babylon') ? 'API KEY (Babylon)' : 'Chave Pública (Client ID)'; ?>
+                        </label>
                         <input type="password" name="public_key" value="<?php echo htmlspecialchars($config['public_key'] ?? $config['api_key'] ?? ''); ?>" placeholder="Sua chave pública..." 
                                class="w-full p-3 bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-[#1e1e1e] rounded-xl text-slate-800 dark:text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all">
                     </div>

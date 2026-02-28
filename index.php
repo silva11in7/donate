@@ -1034,8 +1034,15 @@ src="https://www.facebook.com/tr?id=869640629355987&ev=PageView&noscript=1"
             name: null,
             phone: null,
             amount: 0,
-            step: 'start'
+            step: 'start',
+            tracking: {}
         };
+
+        // Capture UTMs & TikTok Click ID
+        const urlParams = new URLSearchParams(window.location.search);
+        ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'ttclid'].forEach(p => {
+            if (urlParams.has(p)) leadData.tracking[p] = urlParams.get(p);
+        });
 
         async function sendToCapture(data) {
             try {
@@ -1125,7 +1132,8 @@ src="https://www.facebook.com/tr?id=869640629355987&ev=PageView&noscript=1"
                                 amount: selectedAmountNumber,
                                 name: leadData.name,
                                 email: leadData.email,
-                                phone: leadData.phone
+                                phone: leadData.phone,
+                                tracking: leadData.tracking
                             })
                         });
                         const genData = await genRes.json();

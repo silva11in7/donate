@@ -145,6 +145,7 @@ function ensure_db($pdo) {
         $pdo->prepare("INSERT INTO gateways (name, active) VALUES ('Genesys', 0)")->execute();
         $pdo->prepare("INSERT INTO gateways (name, active) VALUES ('Amplo', 0)")->execute();
         $pdo->prepare("INSERT INTO gateways (name, active) VALUES ('Oasyfy', 0)")->execute();
+        $pdo->prepare("INSERT INTO gateways (name, active) VALUES ('Babylon', 0)")->execute();
     }
 
     // Seed default settings if empty
