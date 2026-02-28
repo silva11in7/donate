@@ -2,6 +2,7 @@
 // api pix/webhook.php
 require_once '../admin/config.php';
 require_once '../include/utmfy_helper.php';
+require_once '../include/tiktok_helper.php';
 
 header('Content-Type: application/json');
 
@@ -49,6 +50,19 @@ if ($our_status === 'approved') {
             'id' => 'doacao_solidaria',
             'name' => 'Doação Solidária',
             'price' => (float)$lead['amount']
+        ]);
+
+        // TikTok - CompletePayment
+        send_tiktok_event('CompletePayment', $lead['id'], [
+            'email' => $lead['email'],
+            'phone' => $lead['phone'],
+            'external_id' => $lead['id'],
+            'ip' => ''
+        ], [
+            'value' => (float)$lead['amount'],
+            'currency' => 'BRL',
+            'content_id' => 'doacao_solidaria',
+            'content_type' => 'product'
         ]);
     }
 }

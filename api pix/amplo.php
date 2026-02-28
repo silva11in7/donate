@@ -2,6 +2,7 @@
 // api pix/amplo.php
 require_once '../admin/config.php';
 require_once '../include/utmfy_helper.php';
+require_once '../include/tiktok_helper.php';
 
 header('Content-Type: application/json');
 
@@ -145,6 +146,25 @@ if ($http_code === 201 && isset($resData['pix'])) {
         'name' => 'Doação Solidária',
         'price' => (float)$amount
     ], $input['tracking'] ?? []);
+
+    // TikTok - InitiateCheckout
+    send_tiktok_event('InitiateCheckout', $identifier, [
+        'email' => $email,
+        'phone' => $phone,
+        'ip' => $_SERVER['REMOTE_ADDR'] ?? '',
+        'ttclid' => $input['tracking']['ttclid'] ?? null
+    ], [
+        'value' => (float)$amount,
+        'currency' => 'BRL',
+        'contents' => [
+            [
+                'id' => 'doacao_solidaria',
+                'name' => 'Doação Solidária',
+                'quantity' => 1,
+                'price' => (float)$amount
+            ]
+        ]
+    ]);
 
     echo json_encode([
         'success' => true,
