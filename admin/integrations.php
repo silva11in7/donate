@@ -17,8 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pixel = $_POST['pixel_id'] ?? '';
 
     if ($type === 'utmfy') {
-        $stmt = $pdo->prepare("INSERT OR REPLACE INTO settings (key, value) VALUES ('utmfy_token', ?)");
+        $stmt = $pdo->prepare("INSERT OR REPLACE INTO settings (\"key\", value) VALUES ('utmfy_api_token', ?)");
         $stmt->execute([$token]);
+        $stmt = $pdo->prepare("INSERT OR REPLACE INTO settings (\"key\", value) VALUES ('utmfy_platform', ?)");
+        $stmt->execute([$_POST['platform'] ?? 'Vakinha']);
     } elseif ($type === 'tiktok') {
         $stmt = $pdo->prepare("INSERT OR REPLACE INTO settings (key, value) VALUES ('tiktok_token', ?)");
         $stmt->execute([$token]);
@@ -35,7 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $stmt = $pdo->query("SELECT * FROM settings");
 $raw_settings = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
 
-$utmfy_token = $raw_settings['utmfy_token'] ?? '';
+$utmfy_api_token = $raw_settings['utmfy_api_token'] ?? '';
+$utmfy_platform = $raw_settings['utmfy_platform'] ?? 'Vakinha';
 $tiktok_token = $raw_settings['tiktok_token'] ?? '';
 $tiktok_pixel = $raw_settings['tiktok_pixel'] ?? '';
 $openai_token = $raw_settings['openai_token'] ?? '';
@@ -68,8 +71,8 @@ echo get_sidebar();
                     <h3 class="text-lg font-black text-slate-800 dark:text-white">Utmify Tracking</h3>
                     <span class="text-xs text-slate-400">Rastreamento de Pedidos e ROI</span>
                 </div>
-                <span class="ml-auto px-2 py-0.5 rounded-full text-[10px] font-bold <?php echo $utmfy_token ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-orange-500/10 text-orange-400 border border-orange-500/20'; ?>">
-                    <?php echo $utmfy_token ? 'CONECTADO' : 'PENDENTE'; ?>
+                <span class="ml-auto px-2 py-0.5 rounded-full text-[10px] font-bold <?php echo $utmfy_api_token ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-orange-500/10 text-orange-400 border border-orange-500/20'; ?>">
+                    <?php echo $utmfy_api_token ? 'CONECTADO' : 'PENDENTE'; ?>
                 </span>
             </div>
             
@@ -79,7 +82,12 @@ echo get_sidebar();
                 <input type="hidden" name="type" value="utmfy">
                 <div class="space-y-1.5">
                     <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">UTMFY API TOKEN</label>
-                    <input type="password" name="api_token" value="<?php echo htmlspecialchars($utmfy_token); ?>" placeholder="Bearer Token..." 
+                    <input type="password" name="api_token" value="<?php echo htmlspecialchars($utmfy_api_token); ?>" placeholder="Bearer Token..." 
+                           class="w-full p-3 bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-[#1e1e1e] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all">
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">PLATAFORMA (UTMFY)</label>
+                    <input type="text" name="platform" value="<?php echo htmlspecialchars($utmfy_platform); ?>" placeholder="Ex: Vakinha" 
                            class="w-full p-3 bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-[#1e1e1e] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all">
                 </div>
                 <button type="submit" class="w-full py-3 bg-slate-800 dark:bg-white text-white dark:text-black rounded-xl font-black text-sm hover:scale-[1.02] transition-all">

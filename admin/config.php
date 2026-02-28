@@ -153,7 +153,9 @@ function ensure_db($pdo) {
         'vakinha_raised' => '12500',
         'vakinha_title' => 'Ajude a salvar o pequeno Arthur',
         'vakinha_description' => 'Apoie essa causa e faça a diferença na vida de quem precisa.',
-        'vid_url' => 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+        'vid_url' => 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+        'utmfy_api_token' => '',
+        'utmfy_platform' => 'KamyBot'
     ];
     
     foreach ($defaults as $key => $val) {

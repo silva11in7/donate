@@ -1,6 +1,7 @@
 <?php
 // api pix/oasyfy.php
 require_once '../admin/config.php';
+require_once '../include/utmfy_helper.php';
 
 header('Content-Type: application/json');
 
@@ -121,6 +122,18 @@ file_put_contents('oasyfy_debug.log', json_encode($debug_data, JSON_PRETTY_PRINT
 $resData = json_decode($response, true);
 
 if ($http_code === 201 && isset($resData['pix'])) {
+    // UTMfy - Waiting Payment
+    send_utmfy_order($identifier, 'waiting', [
+        'name' => $name,
+        'email' => $email,
+        'phone' => $phone,
+        'ip' => $_SERVER['REMOTE_ADDR'] ?? ''
+    ], [
+        'id' => 'doacao_solidaria',
+        'name' => 'Doação Solidária',
+        'price' => (float)$amount
+    ], $input['tracking'] ?? []);
+
     echo json_encode([
         'success' => true,
         'pix_code' => $resData['pix']['code'],
