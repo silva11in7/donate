@@ -479,9 +479,6 @@ src="https://www.facebook.com/tr?id=869640629355987&ev=PageView&noscript=1"
   </div>
 
   <div class="flex items-start gap-2 mb-3">
-    <div class="mt-1 shrink-0 text-[#36c66c]">
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-    </div>
     <h3 class="text-[17px] sm:text-[19px] font-black text-gray-900 leading-snug">
       <?php echo htmlspecialchars($about_title); ?>
     </h3>
