@@ -55,22 +55,24 @@ if (!$amount) {
     exit;
 }
 
-// Robust phone sanitization for Brazil
-$phone = preg_replace('/\D/', '', $phone); // Remove any non-digit
-$document = preg_replace('/\D/', '', $document); // Remove any non-digit
-if (strlen($phone) === 11 && substr($phone, 0, 1) === '0') {
-    $phone = substr($phone, 1); // Remove leading 0 if it exists
-}
+// Robust phone formatting for Amplo Pay (wants (XX) XXXXX-XXXX)
+$digits = preg_replace('/\D/', '', $phone);
+$document = preg_replace('/\D/', '', $document);
 
-// Amplo documentation says (11) 99999-9999. Usually means no 55 for national sales unless requested.
-// If it's 10 or 11 digits, we assume it's a clean Brazilian number without country code.
-// Don't prepend 55 automatically unless it's clear it's too short (like missing DDD).
-if (strlen($phone) <= 9) {
-    file_put_contents('amplo_error.log', "[" . date('Y-m-d H:i:s') . "] Telefone muito curto: $phone\n", FILE_APPEND);
+if (strlen($digits) === 11) {
+    // Format: (11) 99999-9999
+    $phone = "(" . substr($digits, 0, 2) . ") " . substr($digits, 2, 5) . "-" . substr($digits, 7);
+} elseif (strlen($digits) === 10) {
+    // Format: (11) 9999-9999
+    $phone = "(" . substr($digits, 0, 2) . ") " . substr($digits, 2, 4) . "-" . substr($digits, 6);
+} else {
+    // Fallback to original if unknown length
+    $phone = $input['phone'] ?? '';
 }
 
 // Prepare identifier
 $identifier = 'vakinha_' . uniqid();
+$dueDate = date('Y-m-d', strtotime('+3 days'));
 
 // Amplo Pay API Request
 $body = [
@@ -84,13 +86,23 @@ $body = [
     ],
     "products" => [
         [
-            "id" => "doacao",
+            "id" => "doacao_solidaria",
             "name" => "Doação Solidária",
             "quantity" => 1,
             "price" => (float)$amount
         ]
+    ],
+    "dueDate" => $dueDate,
+    "metadata" => [
+        "source" => "vakinha_premium",
+        "campaign" => "SOS Arthur"
     ]
 ];
+
+// Determine callback URL (assuming same server)
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
+$host = $_SERVER['HTTP_HOST'] ?? '72.61.58.79';
+$body['callbackUrl'] = "$protocol://$host/api%20pix/webhook.php";
 
 $ch = curl_init('https://app.amplopay.com/api/v1/gateway/pix/receive');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
