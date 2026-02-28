@@ -410,26 +410,6 @@ src="https://www.facebook.com/tr?id=869640629355987&ev=PageView&noscript=1"
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         <!-- Left Column -->
         <div class="lg:col-span-2 space-y-4 sm:space-y-6">
-          <!-- New Banner Styled -->
-          <div class="relative w-full aspect-video sm:aspect-[21/9] rounded-3xl overflow-hidden shadow-2xl group mb-6">
-            <?php if (!empty($vid_url) && empty($banner_url)): ?>
-               <iframe class="w-full h-full" src="<?php echo htmlspecialchars($vid_url); ?>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            <?php else: ?>
-               <img src="<?php echo htmlspecialchars($banner_url ?: 'images/banner_default.jpg'); ?>" alt="Banner Campanha" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-               
-               <!-- Glass Overlay -->
-               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-               
-               <!-- Content -->
-               <div class="absolute inset-0 p-4 sm:p-8 flex flex-col justify-between">
-                 <!-- Author Tag -->
-                 <div class="self-start px-3 py-1.5 bg-black/40 backdrop-blur-md rounded-xl border border-white/10">
-                    <p class="text-[10px] text-white/60 uppercase tracking-widest font-bold mb-0.5">Criado por</p>
-                    <p class="text-xs text-white font-black"><?php echo htmlspecialchars($banner_author); ?></p>
-                 </div>
-
-                 <div class="flex items-end justify-between gap-4">
-                   <div class="space-y-2">
           <!-- Banner -->
           <div class="relative">
             <img src="<?php echo htmlspecialchars($banner_url ?: 'images/banner_69977b427e6b2.png'); ?>" alt="Imagem da Campanha" class="w-full hero-img rounded-xl object-contain sm:object-cover shadow-custom">
