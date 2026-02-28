@@ -159,7 +159,11 @@ function ensure_db($pdo) {
     }
 }
 
-ensure_db($pdo);
+// Optimization: Only run ensure_db once per session to avoid slowness
+if (!isset($_SESSION['db_initialized']) || isset($_GET['reinit_db'])) {
+    ensure_db($pdo);
+    $_SESSION['db_initialized'] = true;
+}
 
 function check_auth() {
     if (!isset($_SESSION['user_id'])) {
