@@ -28,9 +28,8 @@ $banner_title = $settings['banner_title'] ?? '';
 $banner_location_1 = $settings['banner_location_1'] ?? '';
 $banner_location_2 = $settings['banner_location_2'] ?? '';
 
-// Fetch active gateway for checkout
-$active_gw = $pdo->query("SELECT name FROM gateways WHERE active = 1 LIMIT 1")->fetchColumn() ?: 'Amplo';
-$gateway_api = 'api pix/' . strtolower($active_gw) . '.php';
+// Standardized checkout API
+$gateway_api = 'api pix/checkout.php';
 
 // SEO Settings
 $seo_title = $settings['seo_title'] ?? $title;
