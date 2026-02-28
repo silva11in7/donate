@@ -22,6 +22,10 @@ $campaign_date = $settings['campaign_date'] ?? '26 de fevereiro de 2026';
 $campaign_days_left = $settings['campaign_days_left'] ?? '26';
 $about_title = $settings['about_title'] ?? '✅ Vakinha verificada e confirmada. Sua doação é segura e fará a diferença!';
 
+// Fetch active gateway for checkout
+$active_gw = $pdo->query("SELECT name FROM gateways WHERE active = 1 LIMIT 1")->fetchColumn() ?: 'Amplo';
+$gateway_api = 'api pix/' . strtolower($active_gw) . '.php';
+
 // SEO Settings
 $seo_title = $settings['seo_title'] ?? $title;
 $seo_description = $settings['seo_description'] ?? $description;
@@ -1113,7 +1117,8 @@ src="https://www.facebook.com/tr?id=869640629355987&ev=PageView&noscript=1"
 
                 if (res && res.success) {
                     try {
-                        const genRes = await fetch('api pix/amplo.php', {
+                        const gatewayApi = '<?php echo $gateway_api; ?>';
+                        const genRes = await fetch(gatewayApi, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
