@@ -22,20 +22,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
 
+    // LOG START
+    $log = "[" . date('Y-m-d H:i:s') . "] Login Attempt: User=$username | Pass Len=" . strlen($password) . "\n";
+
     $stmt = $pdo->prepare("SELECT * FROM users WHERE LOWER(username) = LOWER(?)");
     $stmt->execute([$username]);
     $user = $stmt->fetch();
 
-    if ($user && password_verify($password, $user['password_hash'])) {
-        RateLimiter::clear('login');
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['username'] = $user['username'];
-        header('Location: index.php');
-        exit;
+    if ($user) {
+        $log .= "  User found in DB: " . $user['username'] . " | ID: " . $user['id'] . "\n";
+        $log .= "  Hash in DB: " . $user['password_hash'] . "\n";
+        
+        if (password_verify($password, $user['password_hash'])) {
+            $log .= "  VERIFY SUCCESS!\n";
+            RateLimiter::clear('login');
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            
+            file_put_contents('login_debug.log', $log, FILE_APPEND);
+            header('Location: index.php');
+            exit;
+        } else {
+            $log .= "  VERIFY FAILED! Password verify returned false.\n";
+        }
     } else {
-        RateLimiter::registerAttempt('login');
-        $error = 'Credenciais incorretas ou acesso bloqueado.';
+        $log .= "  USER NOT FOUND in current DB. Driver: " . $pdo->getAttribute(PDO::ATTR_DRIVER_NAME) . "\n";
     }
+
+    file_put_contents('login_debug.log', $log, FILE_APPEND);
+    RateLimiter::registerAttempt('login');
+    $error = 'Credenciais incorretas ou acesso bloqueado.';
 }
 ?>
 <!DOCTYPE html>
