@@ -1,0 +1,33 @@
+# Environment & Secrets
+.env
+*.env.*
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+
+# Test files
+test_db.php
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS Files
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Gemini / AI
+.gemini/
+
+# Logs
+*.log
+error_log
+
+# Temporary
+/tmp/
