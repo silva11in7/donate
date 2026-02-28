@@ -156,7 +156,12 @@ function ensure_db($pdo) {
         'vakinha_description' => 'Apoie essa causa e faça a diferença na vida de quem precisa.',
         'vid_url' => 'https://www.youtube.com/embed/dQw4w9WgXcQ',
         'utmfy_api_token' => '',
-        'utmfy_platform' => 'KamyBot'
+        'utmfy_platform' => 'KamyBot',
+        'banner_url' => 'https://images.unsplash.com/photo-1547683326-33a7ad29c8a2?auto=format&fit=crop&q=80&w=1200',
+        'banner_author' => 'Cruz Vermelha',
+        'banner_title' => 'SOS ENCHENTES',
+        'banner_location_1' => 'JUIZ DE FORA - MG',
+        'banner_location_2' => 'ÚBA - MG'
     ];
     
     foreach ($defaults as $key => $val) {

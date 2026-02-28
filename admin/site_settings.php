@@ -24,7 +24,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_site_settings'])
         'about_title' => $_POST['about_title'] ?? '',
         'seo_title' => $_POST['seo_title'] ?? '',
         'seo_description' => $_POST['seo_description'] ?? '',
-        'seo_keywords' => $_POST['seo_keywords'] ?? ''
+        'seo_keywords' => $_POST['seo_keywords'] ?? '',
+        'banner_url' => $_POST['banner_url'] ?? '',
+        'banner_author' => $_POST['banner_author'] ?? '',
+        'banner_title' => $_POST['banner_title'] ?? '',
+        'banner_location_1' => $_POST['banner_location_1'] ?? '',
+        'banner_location_2' => $_POST['banner_location_2'] ?? ''
     ];
 
     try {
@@ -177,6 +182,51 @@ echo get_sidebar();
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Banner Superior -->
+            <div class="card p-8 group border border-slate-200/50 dark:border-white/5 transition-all hover:border-amber-500/30">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center shadow-inner">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-black text-slate-800 dark:text-white">Banner Superior</h3>
+                        <p class="text-xs text-slate-400">Personalize o banner de destaque da página.</p>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">URL da Imagem do Banner</label>
+                        <input type="text" name="banner_url" value="<?php echo htmlspecialchars($settings['banner_url'] ?? ''); ?>" placeholder="https://..."
+                               class="w-full p-4 bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 rounded-2xl text-slate-800 dark:text-slate-200 text-sm focus:ring-2 focus:ring-amber-500/20 transition-all outline-none">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Título do Banner</label>
+                            <input type="text" name="banner_title" value="<?php echo htmlspecialchars($settings['banner_title'] ?? ''); ?>" placeholder="Ex: SOS ENCHENTES"
+                                   class="w-full p-4 bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 rounded-2xl text-slate-800 dark:text-slate-200 font-bold focus:ring-2 focus:ring-amber-500/20 transition-all outline-none">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Criado por (Autor)</label>
+                            <input type="text" name="banner_author" value="<?php echo htmlspecialchars($settings['banner_author'] ?? ''); ?>" placeholder="Ex: Cruz Vermelha"
+                                   class="w-full p-4 bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 rounded-2xl text-slate-800 dark:text-slate-200 text-sm focus:ring-2 focus:ring-amber-500/20 transition-all outline-none">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Localização 1</label>
+                            <input type="text" name="banner_location_1" value="<?php echo htmlspecialchars($settings['banner_location_1'] ?? ''); ?>" placeholder="Ex: JUIZ DE FORA - MG"
+                                   class="w-full p-4 bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 rounded-2xl text-slate-800 dark:text-slate-200 text-sm focus:ring-2 focus:ring-amber-500/20 transition-all outline-none">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Localização 2</label>
+                            <input type="text" name="banner_location_2" value="<?php echo htmlspecialchars($settings['banner_location_2'] ?? ''); ?>" placeholder="Ex: UBA - MG"
+                                   class="w-full p-4 bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 rounded-2xl text-slate-800 dark:text-slate-200 text-sm focus:ring-2 focus:ring-amber-500/20 transition-all outline-none">
                         </div>
                     </div>
                 </div>

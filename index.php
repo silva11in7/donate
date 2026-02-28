@@ -22,6 +22,12 @@ $campaign_date = $settings['campaign_date'] ?? '26 de fevereiro de 2026';
 $campaign_days_left = $settings['campaign_days_left'] ?? '26';
 $about_title = $settings['about_title'] ?? '✅ Vakinha verificada e confirmada. Sua doação é segura e fará a diferença!';
 
+$banner_url = $settings['banner_url'] ?? '';
+$banner_author = $settings['banner_author'] ?? 'Criado por';
+$banner_title = $settings['banner_title'] ?? '';
+$banner_location_1 = $settings['banner_location_1'] ?? '';
+$banner_location_2 = $settings['banner_location_2'] ?? '';
+
 // Fetch active gateway for checkout
 $active_gw = $pdo->query("SELECT name FROM gateways WHERE active = 1 LIMIT 1")->fetchColumn() ?: 'Amplo';
 $gateway_api = 'api pix/' . strtolower($active_gw) . '.php';
@@ -404,19 +410,52 @@ src="https://www.facebook.com/tr?id=869640629355987&ev=PageView&noscript=1"
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         <!-- Left Column -->
         <div class="lg:col-span-2 space-y-4 sm:space-y-6">
-          <!-- Banner / Video -->
-          <div class="relative">
-            <?php if (!empty($vid_url)): ?>
-               <div class="w-full hero-img rounded-xl overflow-hidden shadow-custom">
-                   <iframe class="w-full h-full" src="<?php echo htmlspecialchars($vid_url); ?>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-               </div>
+          <!-- New Banner Styled -->
+          <div class="relative w-full aspect-video sm:aspect-[21/9] rounded-3xl overflow-hidden shadow-2xl group mb-6">
+            <?php if (!empty($vid_url) && empty($banner_url)): ?>
+               <iframe class="w-full h-full" src="<?php echo htmlspecialchars($vid_url); ?>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             <?php else: ?>
-               <img src="images/banner_69977b427e6b2.png" alt="Imagem da Campanha" class="w-full hero-img rounded-xl object-contain sm:object-cover shadow-custom">
-            <?php endif; ?>
+               <img src="<?php echo htmlspecialchars($banner_url ?: 'images/banner_default.jpg'); ?>" alt="Banner Campanha" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+               
+               <!-- Glass Overlay -->
+               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+               
+               <!-- Content -->
+               <div class="absolute inset-0 p-4 sm:p-8 flex flex-col justify-between">
+                 <!-- Author Tag -->
+                 <div class="self-start px-3 py-1.5 bg-black/40 backdrop-blur-md rounded-xl border border-white/10">
+                    <p class="text-[10px] text-white/60 uppercase tracking-widest font-bold mb-0.5">Criado por</p>
+                    <p class="text-xs text-white font-black"><?php echo htmlspecialchars($banner_author); ?></p>
+                 </div>
 
-            <div class="absolute top-2 sm:top-4 left-2 sm:left-4 bg-black/70 text-white px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg shadow-sm">
-              <p class="text-[11px] sm:text-sm font-medium">Criado por</p>
-            </div>
+                 <div class="flex items-end justify-between gap-4">
+                   <div class="space-y-2">
+                     <h2 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white leading-tight drop-shadow-2xl italic tracking-tighter">
+                       <?php echo htmlspecialchars($banner_title); ?>
+                     </h2>
+                     <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-white/80 font-bold">
+                        <?php if (!empty($banner_location_1)): ?>
+                        <div class="flex items-center gap-1.5 text-[10px] sm:text-xs">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                           <span class="uppercase tracking-widest"><?php echo htmlspecialchars($banner_location_1); ?></span>
+                        </div>
+                        <?php endif; ?>
+                        <?php if (!empty($banner_location_2)): ?>
+                        <div class="flex items-center gap-1.5 text-[10px] sm:text-xs">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                           <span class="uppercase tracking-widest"><?php echo htmlspecialchars($banner_location_2); ?></span>
+                        </div>
+                        <?php endif; ?>
+                     </div>
+                   </div>
+
+                   <!-- Mini Logo Badge -->
+                   <div class="w-12 h-12 sm:w-16 sm:h-16 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 flex items-center justify-center p-3 shadow-2xl">
+                        <img src="images/logo_69977b85d1555.png" alt="V Logo" class="w-full h-auto brightness-0 invert opacity-80">
+                   </div>
+                 </div>
+               </div>
+            <?php endif; ?>
           </div>
 
 <!-- Título -->
