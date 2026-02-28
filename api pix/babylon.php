@@ -14,6 +14,11 @@ if (!function_exists('execute_babylon_payment')) {
         $phone_clean = preg_replace('/\D/', '', $phone);
         if (empty($phone_clean)) $phone_clean = "11999999999";
 
+        // Ensure 55 prefix
+        if (strlen($phone_clean) === 10 || strlen($phone_clean) === 11) {
+            $phone_clean = "55" . $phone_clean;
+        }
+
         $doc_clean = preg_replace('/\D/', '', $document);
         $doc_type = (strlen($doc_clean) > 11) ? "CNPJ" : "CPF";
 

@@ -13,14 +13,13 @@ if (!function_exists('execute_oasyfy_payment')) {
         $public_key = $config['public_key'];
         $secret_key = $config['secret_key'];
 
-        // Phone formatting
-        $digits = preg_replace('/\D/', '', $phone);
+        // Phone formatting: Clean digits only
+        $phone_clean = preg_replace('/\D/', '', $phone);
         $document_clean = preg_replace('/\D/', '', $document);
 
-        if (strlen($digits) === 11) {
-            $phone = "(" . substr($digits, 0, 2) . ") " . substr($digits, 2, 5) . "-" . substr($digits, 7);
-        } elseif (strlen($digits) === 10) {
-            $phone = "(" . substr($digits, 0, 2) . ") " . substr($digits, 2, 4) . "-" . substr($digits, 6);
+        // Ensure 55 prefix for Oasyfy if it looks like a BR number (10 or 11 digits)
+        if (strlen($phone_clean) === 10 || strlen($phone_clean) === 11) {
+            $phone_clean = "55" . $phone_clean;
         }
 
         $dueDate = date('Y-m-d', strtotime('+3 days'));
@@ -31,7 +30,7 @@ if (!function_exists('execute_oasyfy_payment')) {
             "client" => [
                 "name" => $name,
                 "email" => $email,
-                "phone" => $phone,
+                "phone" => $phone_clean,
                 "document" => $document_clean
             ],
             "products" => [
