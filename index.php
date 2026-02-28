@@ -430,86 +430,67 @@ src="https://www.facebook.com/tr?id=869640629355987&ev=PageView&noscript=1"
 
                  <div class="flex items-end justify-between gap-4">
                    <div class="space-y-2">
-                     <h2 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white leading-tight drop-shadow-2xl italic tracking-tighter">
-                       <?php echo htmlspecialchars($banner_title); ?>
-                     </h2>
-                     <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-white/80 font-bold">
-                        <?php if (!empty($banner_location_1)): ?>
-                        <div class="flex items-center gap-1.5 text-[10px] sm:text-xs">
-                           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                           <span class="uppercase tracking-widest"><?php echo htmlspecialchars($banner_location_1); ?></span>
-                        </div>
-                        <?php endif; ?>
-                        <?php if (!empty($banner_location_2)): ?>
-                        <div class="flex items-center gap-1.5 text-[10px] sm:text-xs">
-                           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                           <span class="uppercase tracking-widest"><?php echo htmlspecialchars($banner_location_2); ?></span>
-                        </div>
-                        <?php endif; ?>
-                     </div>
-                   </div>
+          <!-- Banner -->
+          <div class="relative">
+            <img src="<?php echo htmlspecialchars($banner_url ?: 'images/banner_69977b427e6b2.png'); ?>" alt="Imagem da Campanha" class="w-full hero-img rounded-xl object-contain sm:object-cover shadow-custom">
 
-                   <!-- Mini Logo Badge -->
-                   <div class="w-12 h-12 sm:w-16 sm:h-16 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 flex items-center justify-center p-3 shadow-2xl">
-                        <img src="images/logo_69977b85d1555.png" alt="V Logo" class="w-full h-auto brightness-0 invert opacity-80">
-                   </div>
-                 </div>
-               </div>
-            <?php endif; ?>
+            <div class="absolute top-2 sm:top-4 left-2 sm:left-4 bg-black/70 text-white px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg shadow-sm">
+              <p class="text-[11px] sm:text-sm font-medium">Criado por <?php echo htmlspecialchars($banner_author ?: 'Acelera Vaquinha'); ?></p>
+            </div>
           </div>
 
-<!-- Título -->
-<h1 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-gray-900">
-  <?php echo htmlspecialchars($title); ?>
-</h1>
+          <!-- Título -->
+          <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-gray-900">
+            <?php echo htmlspecialchars($title); ?>
+          </h1>
 
-<!-- Badges + datas -->
-<div class="flex flex-wrap items-center gap-2 sm:gap-3">
-  <div class="flex items-center gap-2 bg-green-50 border border-green-200 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg shadow-sm">
-    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: var(--main)">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path>
-    </svg>
-    <span class="text-xs sm:text-sm font-medium" style="color: var(--main)">Campanha Verificada</span>
-  </div>
+          <!-- Badges + datas -->
+          <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+            <div class="flex items-center gap-2 bg-green-50 border border-green-200 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg shadow-sm">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: var(--main)">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path>
+              </svg>
+              <span class="text-xs sm:text-sm font-medium" style="color: var(--main)">Campanha Verificada</span>
+            </div>
 
-  <div class="bg-yellow-50 border border-yellow-200 text-yellow-700 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold shadow-sm">
-    Doação Protegida
-  </div>
+            <div class="bg-yellow-50 border border-yellow-200 text-yellow-700 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold shadow-sm">
+              Doação Protegida
+            </div>
 
-  <div class="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500">
-    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l4 2m0-10a10 10 0 11-10 10 10 10 0 0110-10z"></path>
-    </svg>
-    <span>Criada em <?php echo htmlspecialchars($campaign_date); ?></span>
-  </div>
+            <div class="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l4 2m0-10a10 10 0 11-10 10 10 10 0 0110-10z"></path>
+              </svg>
+              <span>Criada em <?php echo htmlspecialchars($campaign_date); ?></span>
+            </div>
 
-  <div class="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm" style="color: var(--sec); font-weight: 600">
-    ⏰ Termina em <?php echo htmlspecialchars($campaign_days_left); ?> dias
-  </div>
-</div>
+            <div class="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm" style="color: var(--sec); font-weight: 600">
+              ⏰ Termina em <?php echo htmlspecialchars($campaign_days_left); ?> dias
+            </div>
+          </div>
 
-<!-- Resumo Mobile: Arrecadado | Meta | Progresso -->
-<div class="resumo-mobile">
-  <div class="bg-white rounded-lg shadow-custom p-4 border border-gray-100">
-    <div class="flex items-center justify-between">
-      <div>
-        <div class="text-xs text-gray-600">Arrecadado</div>
-        <div class="text-2xl font-bold" style="color: var(--main)"><?php echo format_brl($total_raised); ?></div>
-      </div>
-      <div class="text-right">
-        <div class="text-xs text-gray-600">Meta</div>
-        <div class="text-sm font-semibold text-gray-800"><?php echo format_brl($goal); ?></div>
-      </div>
-    </div>
+          <!-- Resumo Mobile: Arrecadado | Meta | Progresso -->
+          <div class="resumo-mobile">
+            <div class="bg-white rounded-lg shadow-custom p-4 border border-gray-100">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-xs text-gray-600">Arrecadado</div>
+                  <div class="text-2xl font-bold" style="color: var(--main)"><?php echo format_brl($total_raised); ?></div>
+                </div>
+                <div class="text-right">
+                  <div class="text-xs text-gray-600">Meta</div>
+                  <div class="text-sm font-semibold text-gray-800"><?php echo format_brl($goal); ?></div>
+                </div>
+              </div>
 
-    <div class="mt-3">
-      <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-        <div class="h-2 rounded-full" style="width: <?php echo $progress_pct; ?>%; background: var(--main)"></div>
-      </div>
-      <div class="mt-1 text-xs text-gray-600"><?php echo $progress_pct; ?>%</div>
-    </div>
-  </div>
-</div>
+              <div class="mt-3">
+                <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                  <div class="h-2 rounded-full" style="width: <?php echo $progress_pct; ?>%; background: var(--main)"></div>
+                </div>
+                <div class="mt-1 text-xs text-gray-600"><?php echo $progress_pct; ?>%</div>
+              </div>
+            </div>
+          </div>
 
 <!-- SOBRE -->
 <section id="tab-sobre" class="tabcontent">
@@ -527,7 +508,102 @@ src="https://www.facebook.com/tr?id=869640629355987&ev=PageView&noscript=1"
   </div>
 
   <div class="text-gray-700 leading-relaxed">
-    <?php echo nl2br(htmlspecialchars($description)); ?>
+    <p><strong>AJUDA HUMANITÁRIA | Zona da Mata (MG): apoio às famílias de Juiz de Fora e Ubá</strong></p>
+
+    <p><strong>Vaquinha criada em: <?php echo htmlspecialchars($campaign_date); ?></strong></p>
+
+    <p>
+      As fortes chuvas que atingiram a região da Zona da Mata mineira, especialmente as cidades de
+      <strong>Juiz de Fora e Ubá</strong>, provocaram uma grave situação de emergência humanitária.
+      Em poucos dias, milhares de famílias tiveram suas rotinas interrompidas, perdendo casas,
+      pertences e, infelizmente, entes queridos.
+    </p>
+
+    <p>
+      De acordo com os dados mais recentes, já são <strong>cerca de 3.500 famílias desalojadas</strong>,
+      além de vítimas fatais e pessoas ainda desaparecidas. Comunidades inteiras enfrentam dificuldades
+      para acessar itens básicos como água potável, alimentos, roupas e produtos de higiene.
+    </p>
+
+    <p>
+      Esta mobilização solidária foi criada para unir pessoas de todo o Brasil em um gesto coletivo
+      de empatia e ajuda ao próximo, apoiando as ações humanitárias conduzidas pela
+      <strong>Cruz Vermelha Brasileira</strong> e demais entidades que atuam diretamente no socorro às
+      famílias afetadas.
+    </p>
+
+    <br>
+
+    <p>
+      <strong>OBJETIVO FINANCEIRO DA CAMPANHA:</strong><br>
+      <?php echo format_brl($goal); ?>
+    </p>
+
+    <p>
+      <em>Importante:</em> A meta representa o objetivo inicial da mobilização. Toda arrecadação adicional
+      será igualmente destinada ao apoio humanitário e às ações emergenciais nas regiões afetadas.
+    </p>
+
+    <br>
+
+    <p><strong>COMO SUA DOAÇÃO VIRA AJUDA?</strong></p>
+
+    <p>Sua contribuição é destinada ao suporte emergencial das famílias atingidas, incluindo:</p>
+
+    <ul class="list-disc ml-6">
+      <li>Distribuição de água potável e kits de higiene</li>
+      <li>Cestas básicas e alimentação emergencial</li>
+      <li>Roupas, colchões e cobertores para famílias desalojadas</li>
+      <li>Apoio logístico para alcançar comunidades isoladas</li>
+    </ul>
+
+    <br>
+
+    <p><strong>POR QUE DOAR AGORA?</strong></p>
+
+    <p>
+      Nos primeiros dias após uma tragédia, a rapidez da ajuda faz toda a diferença. Muitas famílias ainda
+      estão em situação de vulnerabilidade extrema e dependem da solidariedade coletiva para recomeçar com
+      dignidade.
+    </p>
+
+    <br>
+
+    <p><strong>TRANSPARÊNCIA E COMPROMISSO:</strong></p>
+
+    <p>Esta campanha busca garantir responsabilidade e clareza na destinação dos recursos, com:</p>
+
+    <ul class="list-decimal ml-6">
+      <li>Atualizações periódicas sobre a campanha;</li>
+      <li>Acompanhamento das ações humanitárias realizadas;</li>
+      <li>Prestação de contas das iniciativas apoiadas;</li>
+      <li>Relatório consolidado ao final da mobilização.</li>
+    </ul>
+
+    <br>
+
+    <p><strong>COMO AJUDAR:</strong></p>
+
+    <ol class="list-decimal ml-6">
+      <li>Realize sua doação pela página oficial da vaquinha;</li>
+      <li>Compartilhe esta campanha nas redes sociais;</li>
+      <li>Envie para amigos e familiares que possam contribuir;</li>
+      <li>Ajude a ampliar esta corrente de solidariedade.</li>
+    </ol>
+
+    <p>
+      <strong>Juiz de Fora e Ubá precisam de todos nós. Sua ajuda representa esperança e reconstrução.</strong>
+    </p>
+
+    <br>
+
+    <p><strong>APOIO HUMANITÁRIO:</strong></p>
+
+    <p>
+      Os recursos arrecadados contribuem para fortalecer o trabalho de organizações humanitárias e
+      voluntários que atuam diretamente no atendimento às famílias atingidas, oferecendo suporte emergencial
+      e auxílio na recuperação das comunidades afetadas.
+    </p>
   </div>
 
   <div class="mt-4">
