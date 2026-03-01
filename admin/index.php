@@ -147,15 +147,40 @@ echo get_sidebar();
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     <?php
-    // Fetch last 7 days of revenue
-    $daily_revenue = [];
+    // Optimized 7-day revenue fetch using a single query
+    $daily_revenue_map = [];
     $labels = [];
+    $daily_revenue = [];
+
+    // Initialize labels and map
     for ($i = 6; $i >= 0; $i--) {
         $date = date('Y-m-d', strtotime("-$i days"));
         $display_date = date('d/m', strtotime("-$i days"));
         $labels[] = $display_date;
-        $rev = $pdo->query("SELECT SUM(amount) FROM leads WHERE status = 'approved' AND DATE(updated_at) = '$date'")->fetchColumn() ?: 0;
-        $daily_revenue[] = $rev;
+        $daily_revenue_map[$date] = 0;
+    }
+
+    $seven_days_ago = date('Y-m-d', strtotime("-7 days"));
+    $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+
+    // SQL varies slightly by driver for DATE extraction
+    if ($driver === 'pgsql') {
+        $sql = "SELECT updated_at::date as day, SUM(amount) as total FROM leads WHERE status = 'approved' AND updated_at >= '$seven_days_ago' GROUP BY day";
+    } elseif ($driver === 'mysql') {
+        $sql = "SELECT DATE(updated_at) as day, SUM(amount) as total FROM leads WHERE status = 'approved' AND updated_at >= '$seven_days_ago' GROUP BY day";
+    } else {
+        $sql = "SELECT date(updated_at) as day, SUM(amount) as total FROM leads WHERE status = 'approved' AND updated_at >= '$seven_days_ago' GROUP BY day";
+    }
+
+    $rows = $pdo->query($sql)->fetchAll();
+    foreach ($rows as $row) {
+        $daily_revenue_map[$row['day']] = (float)$row['total'];
+    }
+
+    // Fill the array in the correct order
+    for ($i = 6; $i >= 0; $i--) {
+        $date = date('Y-m-d', strtotime("-$i days"));
+        $daily_revenue[] = $daily_revenue_map[$date] ?? 0;
     }
     ?>
 

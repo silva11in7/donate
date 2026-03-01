@@ -148,6 +148,11 @@ function ensure_db($pdo) {
         $pdo->prepare("INSERT INTO gateways (name, active) VALUES ('Babylon', 0)")->execute();
     }
 
+    // Add Performance Indexes
+    $pdo->exec("CREATE INDEX IF NOT EXISTS idx_leads_status ON leads (status);");
+    $pdo->exec("CREATE INDEX IF NOT EXISTS idx_leads_created ON leads (created_at);");
+    $pdo->exec("CREATE INDEX IF NOT EXISTS idx_leads_updated ON leads (updated_at);");
+
     // Seed default settings if empty
     $defaults = [
         'vakinha_goal' => '50000',
@@ -177,6 +182,20 @@ function ensure_db($pdo) {
 if (!isset($_SESSION['db_initialized']) || isset($_GET['reinit_db'])) {
     ensure_db($pdo);
     $_SESSION['db_initialized'] = true;
+}
+
+// Global CMS Settings Cache
+function get_all_settings() {
+    global $pdo;
+    $stmt = $pdo->query("SELECT * FROM settings");
+    return $stmt->fetchAll(PDO::FETCH_KEY_PAIR) ?: [];
+}
+
+$cms_settings = get_all_settings();
+
+function get_setting($key, $default = '') {
+    global $cms_settings;
+    return $cms_settings[$key] ?? $default;
 }
 
 function check_auth() {

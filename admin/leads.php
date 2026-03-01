@@ -4,7 +4,18 @@ require_once 'config.php';
 require_once 'layout.php';
 check_auth();
 
-$leads = $pdo->query("SELECT * FROM leads ORDER BY created_at DESC")->fetchAll();
+// Pagination Logic
+$limit = 20;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($page < 1) $page = 1;
+$offset = ($page - 1) * $limit;
+
+$total_leads = $pdo->query("SELECT COUNT(*) FROM leads")->fetchColumn();
+$total_pages = ceil($total_leads / $limit);
+
+$leads = $pdo->prepare("SELECT * FROM leads ORDER BY created_at DESC LIMIT ? OFFSET ?");
+$leads->execute([$limit, $offset]);
+$leads = $leads->fetchAll();
 
 // Funnel stats
 $steps = [
@@ -113,6 +124,22 @@ echo get_sidebar();
                 </tbody>
             </table>
         </div>
+        
+        <!-- Pagination Controls -->
+        <?php if ($total_pages > 1): ?>
+        <div class="p-5 border-t dark:border-[#1e1e1e] flex items-center justify-between">
+            <p class="text-xs text-slate-400">Mostrando <?php echo $offset + 1; ?>-<?php echo min($offset + $limit, $total_leads); ?> de <?php echo $total_leads; ?> leads</p>
+            <div class="flex gap-2">
+                <?php if ($page > 1): ?>
+                    <a href="?page=<?php echo $page - 1; ?>" class="px-3 py-1.5 bg-slate-100 dark:bg-white/5 rounded-lg text-xs font-bold hover:bg-emerald-500 hover:text-white transition-all">Anterior</a>
+                <?php endif; ?>
+                
+                <?php if ($page < $total_pages): ?>
+                    <a href="?page=<?php echo $page + 1; ?>" class="px-3 py-1.5 bg-slate-100 dark:bg-white/5 rounded-lg text-xs font-bold hover:bg-emerald-500 hover:text-white transition-all">Próxima</a>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php endif; ?>
     </div>
 </main>
 

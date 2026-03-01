@@ -33,8 +33,7 @@ function get_sidebar() {
     <aside class="w-64 bg-black h-screen fixed shadow-2xl flex flex-col z-50">
         <div class="p-6 border-b border-white/5">
             <?php 
-            global $pdo;
-            $logo_url = $pdo->query("SELECT value FROM settings WHERE key = 'logo_url'")->fetchColumn();
+            $logo_url = get_setting('logo_url');
             $logo_display = $logo_url ? ((strpos($logo_url, 'admin/') === 0) ? str_replace('admin/', '', $logo_url) : $logo_url) : '';
             ?>
             <h2 class="text-white text-xl font-black tracking-tight">
