@@ -826,45 +826,65 @@ src="https://www.facebook.com/tr?id=869640629355987&ev=PageView&noscript=1"
           </div>
         </section>
         
-        <!-- STEP 2: Payment Method Selection -->
-        <section id="step-2" class="hidden flex-1 flex flex-col bg-gradient-to-b from-white to-gray-50">
+        <section id="step-2" class="hidden flex-1 flex flex-col bg-gradient-to-b from-white to-gray-50 overflow-y-auto">
           <div class="border-b bg-white/85 backdrop-blur-sm sticky top-0 z-10 shadow-sm">
             <div class="max-w-2xl mx-auto w-full px-3 sm:px-4 py-3">
-              <div class="min-w-0">
-                <h1 class="text-sm sm:text-base font-semibold flex items-center gap-2">
-                  <img src="images/pix.svg" class="h-5 w-5" alt="PIX" style="filter: invert(1) brightness(100%); background: #16a34a; border-radius: 9999px">
-                  Método de Pagamento
-                </h1>
-                <p class="text-xs sm:text-sm text-gray-500">Passo 2 de 3</p>
+              <div class="flex items-center justify-between">
+                <div class="min-w-0">
+                  <h1 class="text-sm sm:text-base font-semibold flex items-center gap-2">
+                    <img src="images/pix.svg" class="h-5 w-5" alt="PIX" style="filter: invert(1) brightness(100%); background: #16a34a; border-radius: 9999px">
+                    Seus Dados
+                  </h1>
+                  <p class="text-xs sm:text-sm text-gray-500">Passo 2 de 3</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-[10px] text-gray-500 uppercase font-black">Doação de</div>
+                    <div class="text-sm font-bold text-gray-900" id="chosenAmountLabel">R$ 0,00</div>
+                </div>
               </div>
 
               <div class="relative w-full overflow-hidden rounded-full bg-gray-200 h-1 mt-3">
-                <div class="h-full" style="background: var(--main); width: 66%"></div>
+                <div class="h-full transition-all duration-500" style="background: var(--main); width: 66%"></div>
               </div>
             </div>
           </div>
 
           <div class="max-w-lg mx-auto w-full px-3 sm:px-4 py-4 sm:py-6">
-            <div class="rounded-lg border bg-white text-gray-900 shadow-custom p-4 sm:p-6 space-y-4 sm:space-y-5">
-              <div class="flex items-center gap-3">
-                <div class="h-10 w-10 rounded-full text-white flex items-center justify-center shrink-0" style="background: var(--main)">
-                  <img src="images/pix.svg" class="h-5 w-5" alt="PIX" style="filter: invert(1) brightness(100%)">
+            <div class="rounded-2xl border bg-white text-gray-900 shadow-custom p-5 sm:p-8 space-y-6">
+              
+              <div class="space-y-4">
+                <div class="space-y-1.5">
+                  <label class="text-[11px] font-black text-gray-400 uppercase tracking-wider ml-1" for="checkout-name">Nome Completo</label>
+                  <div class="relative">
+                    <input type="text" id="checkout-name" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all" placeholder="Como no seu documento">
+                  </div>
                 </div>
 
-                <div class="min-w-0">
-                  <div class="text-xs sm:text-sm text-gray-500">Total da doação</div>
-                  <div class="text-lg sm:text-xl font-bold text-gray-900">
-                    <span id="chosenAmountLabel">R$ 0,00</span>
+                <div class="space-y-1.5">
+                  <label class="text-[11px] font-black text-gray-400 uppercase tracking-wider ml-1" for="checkout-email">E-mail para recibo</label>
+                  <div class="relative">
+                    <input type="email" id="checkout-email" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all" placeholder="exemplo@email.com">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="space-y-1.5">
+                    <label class="text-[11px] font-black text-gray-400 uppercase tracking-wider ml-1" for="checkout-phone">WhatsApp</label>
+                    <input type="text" id="checkout-phone" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all" placeholder="(00) 00000-0000">
+                  </div>
+                  <div class="space-y-1.5">
+                    <label class="text-[11px] font-black text-gray-400 uppercase tracking-wider ml-1" for="checkout-document">CPF ou CNPJ</label>
+                    <input type="text" id="checkout-document" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all" placeholder="000.000.000-00">
                   </div>
                 </div>
               </div>
 
-              <div>
-                <h3 class="font-semibold text-sm sm:text-base mb-2">Pagar com</h3>
-                <button id="payPix" class="w-full inline-flex items-center justify-center gap-3 rounded-md text-white font-semibold px-4 py-3 h-12 transition-all hover-scale" style="background: var(--main)">
-                  <img src="images/pix.svg" class="h-5 w-5" alt="PIX" style="filter: invert(1) brightness(100%)">
-                  PIX (recomendado)
+              <div class="pt-4 space-y-3">
+                <button id="payPix" class="w-full inline-flex items-center justify-center gap-3 rounded-2xl text-white font-bold px-4 py-4 h-14 shadow-lg shadow-green-600/20 transition-all hover:brightness-110 active:scale-95" style="background: var(--main)">
+                  <img src="images/pix.svg" class="h-6 w-6" alt="PIX" style="filter: invert(1) brightness(100%)">
+                  Gerar QR Code PIX
                 </button>
+                <p class="text-[10px] text-gray-400 text-center font-medium">Sua doação é 100% segura e criptografada.</p>
               </div>
             </div>
           </div>
@@ -1205,6 +1225,27 @@ src="https://www.facebook.com/tr?id=869640629355987&ev=PageView&noscript=1"
             payBtn.addEventListener('click', async () => {
                 if (!selectedAmountNumber) return;
 
+                const nameInp = document.getElementById('checkout-name');
+                const emailInp = document.getElementById('checkout-email');
+                const phoneInp = document.getElementById('checkout-phone');
+                const docInp = document.getElementById('checkout-document');
+
+                if (!nameInp.value || !emailInp.value || !phoneInp.value || !docInp.value) {
+                    alert('Por favor, preencha todos os campos para continuar.');
+                    return;
+                }
+
+                // Basic email validation
+                if (!emailInp.value.includes('@') || !emailInp.value.includes('.')) {
+                    alert('Por favor, insira um e-mail válido.');
+                    return;
+                }
+
+                leadData.name = nameInp.value;
+                leadData.email = emailInp.value;
+                leadData.phone = phoneInp.value;
+                leadData.document = docInp.value;
+
                 // Show step 3 immediately with loading
                 step2.classList.add('hidden');
                 step3.classList.remove('hidden');
@@ -1300,6 +1341,37 @@ src="https://www.facebook.com/tr?id=869640629355987&ev=PageView&noscript=1"
                 });
             });
         }
+
+        // Masking helper
+        function maskInput(id, maskFunc) {
+            const inp = document.getElementById(id);
+            if (!inp) return;
+            inp.addEventListener('input', (e) => {
+                const val = e.target.value;
+                const masked = maskFunc(val);
+                if (masked !== val) {
+                    e.target.value = masked;
+                }
+            });
+        }
+
+        maskInput('checkout-phone', (v) => {
+            v = v.replace(/\D/g, '').slice(0, 11);
+            if (v.length > 10) return `(${v.slice(0, 2)}) ${v.slice(2, 7)}-${v.slice(7)}`;
+            if (v.length > 6) return `(${v.slice(0, 2)}) ${v.slice(2, 6)}-${v.slice(6)}`;
+            if (v.length > 2) return `(${v.slice(0, 2)}) ${v.slice(2)}`;
+            if (v.length > 0) return `(${v}`;
+            return v;
+        });
+
+        maskInput('checkout-document', (v) => {
+            v = v.replace(/\D/g, '').slice(0, 14);
+            if (v.length > 11) return `${v.slice(0, 2)}.${v.slice(2, 5)}.${v.slice(5, 8)}/${v.slice(8, 12)}-${v.slice(12)}`;
+            if (v.length > 9) return `${v.slice(0, 3)}.${v.slice(3, 6)}.${v.slice(6, 9)}-${v.slice(9)}`;
+            if (v.length > 6) return `${v.slice(0, 3)}.${v.slice(3, 6)}.${v.slice(6)}`;
+            if (v.length > 3) return `${v.slice(0, 3)}.${v.slice(3)}`;
+            return v;
+        });
       })();
     </script>
 </body></html>
