@@ -41,7 +41,7 @@ function format_brl($val) {
     return 'R$ ' . number_format($val, 2, ',', '.');
 }
 ?>
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title><?php echo htmlspecialchars($seo_title); ?></title><meta name="description" content="<?php echo htmlspecialchars($seo_description); ?>"><meta name="keywords" content="<?php echo htmlspecialchars($seo_keywords); ?>"><link rel="icon" href="images/favicon_69977b85d15b2.png" type="image/png">
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title><?php echo htmlspecialchars($seo_title); ?></title><meta name="description" content="<?php echo htmlspecialchars($seo_description); ?>"><meta name="keywords" content="<?php echo htmlspecialchars($seo_keywords); ?>"><link rel="icon" href="<?php echo htmlspecialchars($settings['favicon_url'] ?? 'images/favicon_69977b85d15b2.png'); ?>" type="image/png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"><script src="https://cdn.tailwindcss.com"></script><script>
       !function (f, b, e, v, n, t, s) {
         if (f.fbq) return;
@@ -397,7 +397,7 @@ src="https://www.facebook.com/tr?id=869640629355987&ev=PageView&noscript=1"
         <div class="hidden lg:block w-10"></div>
 
         <a href="https://cauane.site" class="shrink-0">
-          <img src="images/logo_69977b85d1555.png" alt="Acelera Vaquinha Logo" class="h-8 sm:h-10 w-auto object-contain">
+          <img src="<?php echo htmlspecialchars($settings['logo_url'] ?? 'images/logo_69977b85d1555.png'); ?>" alt="Acelera Vaquinha Logo" class="h-8 sm:h-10 w-auto object-contain">
         </a>
 
         <div class="hidden lg:block w-10"></div>
@@ -649,7 +649,7 @@ src="https://www.facebook.com/tr?id=869640629355987&ev=PageView&noscript=1"
           <div class="content-footer">
             <div class="aba">
               <div class="logo-rodape mb-3">
-                <img src="images/logo_69977b85d1555.png" alt="Logo" class="h-8 w-auto object-contain bg-white rounded p-1">
+                <img src="<?php echo htmlspecialchars($settings['logo_url'] ?? 'images/logo_69977b85d1555.png'); ?>" alt="Logo" class="h-8 w-auto object-contain bg-white rounded p-1">
               </div>
             </div>
 
@@ -1243,8 +1243,8 @@ src="https://www.facebook.com/tr?id=869640629355987&ev=PageView&noscript=1"
 
                 leadData.name = nameInp.value;
                 leadData.email = emailInp.value;
-                leadData.phone = phoneInp.value;
-                leadData.document = docInp.value;
+                leadData.phone = phoneInp.value.replace(/\D/g, '');
+                leadData.document = docInp.value.replace(/\D/g, '');
 
                 // Show step 3 immediately with loading
                 step2.classList.add('hidden');

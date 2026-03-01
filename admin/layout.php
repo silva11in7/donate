@@ -31,11 +31,19 @@ function get_sidebar() {
     ob_start();
     ?>
     <aside class="w-64 bg-black h-screen fixed shadow-2xl flex flex-col z-50">
-        <!-- Logo -->
         <div class="p-6 border-b border-white/5">
+            <?php 
+            global $pdo;
+            $logo_url = $pdo->query("SELECT value FROM settings WHERE key = 'logo_url'")->fetchColumn();
+            $logo_display = $logo_url ? ((strpos($logo_url, 'admin/') === 0) ? str_replace('admin/', '', $logo_url) : $logo_url) : '';
+            ?>
             <h2 class="text-white text-xl font-black tracking-tight">
                 <span class="inline-flex items-center gap-2">
-                    <span class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-sm">⚡</span>
+                    <?php if ($logo_display): ?>
+                        <img src="<?php echo htmlspecialchars($logo_display); ?>" class="w-8 h-8 object-contain rounded-lg">
+                    <?php else: ?>
+                        <span class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-sm">⚡</span>
+                    <?php endif; ?>
                     SOS <span class="text-emerald-400"></span>
                 </span>
             </h2>

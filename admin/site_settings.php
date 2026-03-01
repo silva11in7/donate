@@ -2,6 +2,7 @@
 // admin/site_settings.php
 require_once 'config.php';
 require_once 'layout.php';
+require_once 'upload_helper.php';
 check_auth();
 
 $msg = '';
@@ -35,6 +36,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_site_settings'])
     try {
         $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
         
+        // Handle File Uploads
+        if (isset($_FILES['banner_file']) && $_FILES['banner_file']['error'] === UPLOAD_ERR_OK) {
+            $path = UploadHelper::handle($_FILES['banner_file'], 'uploads/', 'banner_');
+            if ($path) $updates['banner_url'] = $path;
+        }
+        if (isset($_FILES['logo_file']) && $_FILES['logo_file']['error'] === UPLOAD_ERR_OK) {
+            $path = UploadHelper::handle($_FILES['logo_file'], 'uploads/', 'logo_');
+            if ($path) $updates['logo_url'] = $path;
+        }
+        if (isset($_FILES['favicon_file']) && $_FILES['favicon_file']['error'] === UPLOAD_ERR_OK) {
+            $path = UploadHelper::handle($_FILES['favicon_file'], 'uploads/', 'favicon_');
+            if ($path) $updates['favicon_url'] = $path;
+        }
+
         foreach ($updates as $key => $val) {
             if ($driver === 'pgsql') {
                 // PostgreSQL Upsert
@@ -95,7 +110,7 @@ echo get_sidebar();
         </div>
         <?php endif; ?>
 
-        <form method="POST" class="space-y-8">
+        <form method="POST" enctype="multipart/form-data" class="space-y-8">
             <?php echo CSRFProtector::hiddenInput(); ?>
             
             <!-- Metas e Valores -->
@@ -174,13 +189,62 @@ echo get_sidebar();
                         <textarea name="vakinha_description" rows="5" 
                                   class="w-full p-4 bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 rounded-2xl text-slate-800 dark:text-slate-200 text-sm leading-relaxed focus:ring-2 focus:ring-blue-500/20 transition-all outline-none"><?php echo htmlspecialchars($settings['vakinha_description'] ?? ''); ?></textarea>
                     </div>
-                    <div class="space-y-2">
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Link do Vídeo (Embed)</label>
-                        <div class="relative">
-                            <input type="text" name="vid_url" value="<?php echo htmlspecialchars($settings['vid_url'] ?? ''); ?>" placeholder="https://www.youtube.com/embed/..."
-                               class="w-full p-4 pl-12 bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 rounded-2xl text-slate-800 dark:text-slate-200 text-sm focus:ring-2 focus:ring-blue-500/20 transition-all outline-none">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+                    <div class="space-y-4">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Vídeo da Campanha</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="relative">
+                                <input type="text" name="vid_url" value="<?php echo htmlspecialchars($settings['vid_url'] ?? ''); ?>" placeholder="https://www.youtube.com/embed/..."
+                                   class="w-full p-4 pl-12 bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 rounded-2xl text-slate-800 dark:text-slate-200 text-sm focus:ring-2 focus:ring-blue-500/20 transition-all outline-none">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 p-4 bg-blue-500/5 rounded-2xl border border-blue-500/10">
+                                 <div class="text-[10px] font-bold text-blue-500 tracking-tighter leading-tight">Dica: Use o link "embed" do YouTube para melhor performance.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Identidade Visual (Logo e Favicon) -->
+                    <div class="pt-6 border-t border-slate-100 dark:border-white/5 space-y-6">
+                        <h4 class="text-sm font-bold text-slate-700 dark:text-slate-300">Identidade Visual</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="space-y-3">
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Logo Principal</label>
+                                <div class="flex items-center gap-4">
+                                    <div class="w-16 h-16 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center overflow-hidden">
+                                        <?php if (!empty($settings['logo_url'])): 
+                                            $logo_display = (strpos($settings['logo_url'], 'admin/') === 0) ? str_replace('admin/', '', $settings['logo_url']) : $settings['logo_url'];
+                                        ?>
+                                            <img src="<?php echo htmlspecialchars($logo_display); ?>" class="max-w-full max-h-full object-contain">
+                                        <?php else: ?>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-300"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                        <?php endif; ?>
+                                    </div>
+                                    <label class="cursor-pointer px-4 py-2 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all shadow-sm">
+                                        Upload Logo
+                                        <input type="file" name="logo_file" class="hidden" accept="image/*">
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="space-y-3">
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Favicon (Ícone)</label>
+                                <div class="flex items-center gap-4">
+                                    <div class="w-16 h-16 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center overflow-hidden">
+                                        <?php if (!empty($settings['favicon_url'])): 
+                                            $favicon_display = (strpos($settings['favicon_url'], 'admin/') === 0) ? str_replace('admin/', '', $settings['favicon_url']) : $settings['favicon_url'];
+                                        ?>
+                                            <img src="<?php echo htmlspecialchars($favicon_display); ?>" class="w-8 h-8 object-contain">
+                                        <?php else: ?>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-300"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                                        <?php endif; ?>
+                                    </div>
+                                    <label class="cursor-pointer px-4 py-2 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all shadow-sm">
+                                        Upload Favicon
+                                        <input type="file" name="favicon_file" class="hidden" accept="image/*">
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -200,10 +264,23 @@ echo get_sidebar();
                 </div>
 
                 <div class="space-y-6">
-                    <div class="space-y-2">
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">URL da Imagem do Banner</label>
-                        <input type="text" name="banner_url" value="<?php echo htmlspecialchars($settings['banner_url'] ?? ''); ?>" placeholder="https://..."
-                               class="w-full p-4 bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-white/5 rounded-2xl text-slate-800 dark:text-slate-200 text-sm focus:ring-2 focus:ring-amber-500/20 transition-all outline-none">
+                    <div class="space-y-3">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">Banner da Campanha</label>
+                        <div class="relative min-h-[200px] rounded-3xl overflow-hidden border-2 border-dashed border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-black/20 group-hover:border-amber-500/30 transition-all">
+                             <?php if (!empty($settings['banner_url'])): 
+                                $banner_display = (strpos($settings['banner_url'], 'admin/') === 0) ? str_replace('admin/', '', $settings['banner_url']) : $settings['banner_url'];
+                             ?>
+                                <img src="<?php echo htmlspecialchars($banner_display); ?>" class="absolute inset-0 w-full h-full object-cover">
+                             <?php endif; ?>
+                             <div class="absolute inset-0 flex flex-col items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <label class="cursor-pointer px-6 py-3 bg-white text-black rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-110 transition-all shadow-2xl">
+                                    Alterar Imagem
+                                    <input type="file" name="banner_file" class="hidden" accept="image/*">
+                                </label>
+                             </div>
+                        </div>
+                        <input type="text" name="banner_url" value="<?php echo htmlspecialchars($settings['banner_url'] ?? ''); ?>" placeholder="Atalho: Cole o link da imagem aqui..."
+                               class="w-full mt-2 p-3 bg-transparent border border-slate-100 dark:border-white/5 rounded-xl text-[10px] text-slate-400 focus:outline-none focus:text-slate-600 transition-all">
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2">
