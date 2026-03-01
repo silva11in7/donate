@@ -102,11 +102,23 @@ echo get_sidebar();
                 </form>
             <?php endif; ?>
 
-            <div class="w-14 h-14 rounded-2xl bg-slate-50 dark:bg-black/40 flex items-center justify-center mb-6 border border-slate-100 dark:border-white/5">
+            <div class="w-14 h-14 rounded-2xl bg-slate-50 dark:bg-black/40 flex items-center justify-center mb-4 border border-slate-100 dark:border-white/5">
                 <svg class="w-7 h-7 <?php echo $gw['active'] ? 'text-emerald-500' : 'text-slate-400'; ?>" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
             </div>
 
-            <h3 class="text-xl font-black text-slate-800 dark:text-white mb-4"><?php echo htmlspecialchars($gw['name']); ?></h3>
+            <?php 
+            $provider_slug = strtolower(str_replace(' ', '', $gw['name']));
+            $impl_exists = file_exists(__DIR__ . "/../api pix/{$provider_slug}.php") || ($provider_slug === 'perfectpay');
+            ?>
+            
+            <div class="flex items-center gap-2 mb-4">
+                <h3 class="text-xl font-black text-slate-800 dark:text-white"><?php echo htmlspecialchars($gw['name']); ?></h3>
+                <?php if ($impl_exists): ?>
+                    <span class="text-[8px] bg-emerald-500/10 text-emerald-500 px-1.5 py-0.5 rounded font-bold uppercase">Pronto</span>
+                <?php else: ?>
+                    <span class="text-[8px] bg-red-500/10 text-red-500 px-1.5 py-0.5 rounded font-bold uppercase">Pendente</span>
+                <?php endif; ?>
+            </div>
             
             <form method="POST" class="mt-auto space-y-4">
                 <?php echo CSRFProtector::hiddenInput(); ?>

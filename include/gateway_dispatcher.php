@@ -29,23 +29,34 @@ function create_payment($data) {
         return ['success' => false, 'error' => 'Nenhum gateway ativo configurado.'];
     }
 
-    $provider = strtolower($gw['name']);
+    // 2. Dynamic Routing
+    $provider_raw = $gw['name'];
+    $provider = strtolower(str_replace(' ', '', $provider_raw)); // e.g. "Perfect Pay" -> "perfectpay"
     $config = json_decode($gw['config_json'] ?? '{}', true);
 
-    // 2. Route to Provider logic
-    $result = null;
+    $gateway_file = __DIR__ . "/../api pix/{$provider}.php";
+    $function_name = "execute_{$provider}_payment";
 
-    if ($provider === 'babylon') {
-        $result = create_babylon_payment($identifier, $amount, $name, $email, $phone, $document, $config);
-    } elseif ($provider === 'amplo' || $provider === 'perfect pay') {
-        $result = create_amplo_payment($identifier, $amount, $name, $email, $phone, $document, $config);
-    } elseif ($provider === 'oasyfy') {
-        $result = create_oasyfy_payment($identifier, $amount, $name, $email, $phone, $document, $config);
-    } elseif ($provider === 'genesys') {
-        $result = create_genesys_payment($identifier, $amount, $name, $email, $phone, $document, $config);
-    } else {
-        return ['success' => false, 'error' => "Provedor desconhecido: $provider"];
+    if (!file_exists($gateway_file)) {
+        // Fallback or specific mappings
+        if ($provider === 'perfectpay') {
+            $gateway_file = __DIR__ . "/../api pix/amplo.php";
+            $function_name = "execute_amplo_payment";
+        }
     }
+
+    if (!file_exists($gateway_file)) {
+        return ['success' => false, 'error' => "Arquivo de integração não encontrado: $provider.php"];
+    }
+
+    require_once $gateway_file;
+
+    if (!function_exists($function_name)) {
+        return ['success' => false, 'error' => "Função $function_name não definida em $provider.php"];
+    }
+
+    // Call the dynamic function
+    $result = $function_name($identifier, $amount, $name, $email, $phone, $document, $config);
 
     // 3. Handle Tracking if payment was initiated successfully
     if ($result && isset($result['success']) && $result['success']) {
@@ -78,27 +89,4 @@ function create_payment($data) {
 
     return $result;
 }
-
-/** 
- * Wrappers for individual gateway calls.
- */
-
-function create_babylon_payment($id, $amount, $name, $email, $phone, $doc, $config) {
-    include_once __DIR__ . '/../api pix/babylon.php';
-    return execute_babylon_payment($id, $amount, $name, $email, $phone, $doc, $config);
-}
-
-function create_amplo_payment($id, $amount, $name, $email, $phone, $doc, $config) {
-    include_once __DIR__ . '/../api pix/amplo.php';
-    return execute_amplo_payment($id, $amount, $name, $email, $phone, $doc, $config);
-}
-
-function create_oasyfy_payment($id, $amount, $name, $email, $phone, $doc, $config) {
-    include_once __DIR__ . '/../api pix/oasyfy.php';
-    return execute_oasyfy_payment($id, $amount, $name, $email, $phone, $doc, $config);
-}
-
-function create_genesys_payment($id, $amount, $name, $email, $phone, $doc, $config) {
-    // Genesys is currently not implemented as a separate function-file
-    return ['success' => false, 'error' => 'Gateway Genesys não implementado nesta versão.'];
-}
+?>
