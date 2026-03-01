@@ -18,6 +18,7 @@ $amount = $input['amount'] ?? 0;
 $step = $input['step'] ?? 'start';
 $pix_code = $input['pix_code'] ?? null;
 $status = $input['status'] ?? 'pending';
+$document = $input['document'] ?? null;
 
 // Get active gateway
 $gateway = $pdo->query("SELECT name FROM gateways WHERE active = 1")->fetchColumn() ?: 'Perfect Pay';
@@ -39,13 +40,14 @@ if ($action === 'capture') {
                 pix_code = COALESCE(?, pix_code),
                 status = ?,
                 gateway = ?,
+                document = COALESCE(?, document),
                 updated_at = CURRENT_TIMESTAMP 
                 WHERE id = ?";
-        $pdo->prepare($sql)->execute([$name, $email, $phone, $step, $amount, $amount, $pix_code, $status, $gateway, $lead_id]);
+        $pdo->prepare($sql)->execute([$name, $email, $phone, $step, $amount, $amount, $pix_code, $status, $gateway, $document, $lead_id]);
     } else {
         // Insert new lead
-        $sql = "INSERT INTO leads (name, email, phone, step, amount, pix_code, status, gateway) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        $pdo->prepare($sql)->execute([$name, $email, $phone, $step, $amount, $pix_code, $status, $gateway]);
+        $sql = "INSERT INTO leads (name, email, phone, step, amount, pix_code, status, gateway, document) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $pdo->prepare($sql)->execute([$name, $email, $phone, $step, $amount, $pix_code, $status, $gateway, $document]);
     }
 
     echo json_encode(['success' => true, 'gateway' => $gateway]);

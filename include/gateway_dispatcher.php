@@ -14,7 +14,7 @@ function create_payment($data) {
     $name = $data['name'] ?? 'Doador Anônimo';
     $email = $data['email'] ?? 'doador@exemplo.com';
     $phone = $data['phone'] ?? '';
-    $document = $data['document'] ?? '000.000.000-00';
+    $document = $data['document'] ?? '';
     $tracking = $data['tracking'] ?? [];
     
     // Identifier for tracking across systems

@@ -1241,6 +1241,12 @@ src="https://www.facebook.com/tr?id=869640629355987&ev=PageView&noscript=1"
                     return;
                 }
 
+                const cleanedDoc = docInp.value.replace(/\D/g, '');
+                if (cleanedDoc.length !== 11 && cleanedDoc.length !== 14) {
+                    alert('Por favor, insira um CPF ou CNPJ válido.');
+                    return;
+                }
+
                 leadData.name = nameInp.value;
                 leadData.email = emailInp.value;
                 leadData.phone = phoneInp.value.replace(/\D/g, '');

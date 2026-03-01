@@ -101,6 +101,7 @@ function ensure_db($pdo) {
         pix_code TEXT,
         status VARCHAR(50) DEFAULT 'pending',
         amount REAL,
+        document VARCHAR(20),
         step VARCHAR(50) DEFAULT 'start',
         gateway VARCHAR(50),
         created_at $timestamp,
