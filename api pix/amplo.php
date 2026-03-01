@@ -13,14 +13,9 @@ if (!function_exists('execute_amplo_payment')) {
         $public_key = $config['public_key'];
         $secret_key = $config['secret_key'];
 
-        // Phone formatting: Clean digits only
+        // Phone formatting: Clean digits only (expecting 10 or 11 digits for BR)
         $phone_clean = preg_replace('/\D/', '', $phone);
         $document_clean = preg_replace('/\D/', '', $document);
-
-        // Ensure 55 prefix for Amplo if it looks like a BR number (10 or 11 digits)
-        if (strlen($phone_clean) === 10 || strlen($phone_clean) === 11) {
-            $phone_clean = "55" . $phone_clean;
-        }
 
         $dueDate = date('Y-m-d', strtotime('+3 days'));
 
