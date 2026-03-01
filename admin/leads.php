@@ -77,6 +77,7 @@ echo get_sidebar();
                 <thead>
                     <tr class="text-[11px] text-slate-400 uppercase tracking-wider border-b dark:border-[#1e1e1e]">
                         <th class="py-4 px-5 font-semibold">Cliente</th>
+                        <th class="py-4 px-5 font-semibold text-[10px]">Documento</th>
                         <th class="py-4 px-5 font-semibold">Etapa Atual</th>
                         <th class="py-4 px-5 font-semibold">Última Atividade</th>
                         <th class="py-4 px-5 font-semibold">Status</th>
@@ -89,6 +90,9 @@ echo get_sidebar();
                         <td class="py-4 px-5">
                             <div class="font-semibold text-slate-800"><?php echo htmlspecialchars($lead['name'] ?: 'Visitante'); ?></div>
                             <div class="text-xs text-slate-400 mt-0.5"><?php echo htmlspecialchars($lead['phone'] ?: ($lead['email'] ?: 'sem contato')); ?></div>
+                        </td>
+                        <td class="py-4 px-5">
+                            <div class="text-xs font-mono text-slate-500"><?php echo htmlspecialchars($lead['document'] ?: '-'); ?></div>
                         </td>
                         <td class="py-4 px-5">
                             <span class="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 font-medium text-xs">
